@@ -43,7 +43,7 @@ def sum_column_values(csv_file, column_index):
 
     return total_sum
 
-# Example usage:
+
 csv_file_path = csvpath  
 column_index_to_sum = 1  
 
@@ -85,7 +85,7 @@ def calculate_profit_changes_and_average(csv_file):
 csv_file_path = csvpath
 changes, average_change = calculate_profit_changes_and_average(csv_file_path)
 
-print(f"Average Change: ${average_change}")
+print(f"Average Change: ${average_change:.2f}")
 
 
 
