@@ -1,12 +1,9 @@
 import os
 import csv
 
-# connect to the csv fille
+# connect to the csv file
 
-csvpath = os.path.join("python-challenge/PyPoll/Resources/election_data.csv") 
-
-
-import csv
+csvpath = os.path.join("python-challenge/PyPoll/Resources/election_data.csv")
 
 def analyze_election(csv_file, output_file):
     # Initialize variables to store election data
@@ -33,6 +30,21 @@ def analyze_election(csv_file, output_file):
     # Find the winner based on popular vote
     winner = max(candidates, key=candidates.get)
 
+    # Print the election analysis results to the terminal
+    print("Election Results")
+    print("-------------------------")
+    print(f"Total Votes: {total_votes}")
+    print("-------------------------")
+
+    # Print results for each candidate
+    for candidate, votes in candidates.items():
+        percentage = percentages[candidate]
+        print(f"{candidate}: {percentage:.2f}% ({votes})")
+
+    print("-------------------------")
+    print(f"Winner: {winner}")
+    print("-------------------------")
+
     # Write the election analysis results to a text file
     with open(output_file, 'w') as output:
         output.write("Election Results\n")
@@ -50,7 +62,8 @@ def analyze_election(csv_file, output_file):
         output.write("-------------------------\n")
 
 
-csv_file_path = csvpath 
-output_file_path = os.path.join("python-challenge/PyPoll/Analysis/analysis.txt") 
+csv_file_path = csvpath
+output_file_path = os.path.join("python-challenge/PyPoll/Analysis/analysis.txt")
 
 analyze_election(csv_file_path, output_file_path)
+
