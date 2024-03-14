@@ -1,7 +1,7 @@
 import os
 import csv
 
-# connect to the csv fille
+# Path to the csv fille
 
 csvpath = os.path.join("python-challenge/PyBank/Resources/budget_data.csv") 
 
@@ -21,40 +21,37 @@ def count_rows_in_column(csv_file, column_number):
 csv_file =  csvpath
 column_number = 0  
 row_count = count_rows_in_column(csv_file, column_number)
+
+# Print the Financial analysis results to the terminal
 print(f"Total Months: {row_count}")
 
 
-# fucntion to sum all values in column 2 
+# fucntion to sum all values in column 2 to find total amount
 
 
-def sum_column_values(csv_file, column_index):
-    total_sum = 0
+def calculate_net_profit_losses(csv_file):
+    net_profit_losses = 0
 
     with open(csv_file, 'r') as file:
-        csv_reader = csv.reader(file)
-        header = next(csv_reader, None)  # Skip the header
-
+        csv_reader = csv.DictReader(file)
         for row in csv_reader:
-            try:
-                value = float(row[column_index])
-                total_sum += value
-            except (ValueError, IndexError):
-                print(f"Skipping invalid value in row {csv_reader.line_num}")
+            profit_loss = int(row['Profit/Losses'])
+            net_profit_losses += profit_loss
 
-    return total_sum
+    return net_profit_losses
 
+# Example usage:
+csv_file_path = csvpath
+net_profit_losses = calculate_net_profit_losses(csv_file_path)
 
-csv_file_path = csvpath  
-column_index_to_sum = 1  
-
-result = sum_column_values(csv_file_path, column_index_to_sum)
-print(f"Total: ${result}")
+# Print the Financial analysis results to the terminal
+print(f"Total: ${net_profit_losses}")
 
 
 # function that calcukates average change 
 
 def calculate_profit_changes_and_average(csv_file):
-    # Initialize variables
+    # Stated variables
     previous_profit_loss = 0
     profit_changes = []
     
@@ -65,7 +62,7 @@ def calculate_profit_changes_and_average(csv_file):
         first_row = next(csv_reader)
         previous_profit_loss = int(first_row['Profit/Losses'])
         
-        # Iterate through the remaining rows
+        # Iterate through the all other rows
         for row in csv_reader:
             current_profit_loss = int(row['Profit/Losses'])
             
@@ -85,6 +82,7 @@ def calculate_profit_changes_and_average(csv_file):
 csv_file_path = csvpath
 changes, average_change = calculate_profit_changes_and_average(csv_file_path)
 
+# Print the Financial analysis results to the terminal
 print(f"Average Change: ${average_change:.2f}")
 
 
@@ -94,25 +92,37 @@ print(f"Average Change: ${average_change:.2f}")
 
 
 def find_greatest_increase(csv_file):
+    # Create a dictionary to store the greatest increase and its corresponding date
     greatest_increase = {'date': None, 'amount': None}
 
+    # Open the CSV file 
     with open(csv_file, 'r') as file:
+        # Create a CSV reader object
         csv_reader = csv.DictReader(file)
+
+        # Create a variable to store the profit/loss of the previous row
         previous_profit_loss = None
 
+        # Iterate through each row in the CSV file
         for row in csv_reader:
+            # Extract the date and profit/loss from the current row
             current_date = row['Date']
             current_profit_loss = int(row['Profit/Losses'])
 
+            # Calculate the profit change compared to the previous row
             if previous_profit_loss is not None:
                 profit_change = current_profit_loss - previous_profit_loss
 
+                # Check if the current profit change is the greatest so far
                 if greatest_increase['amount'] is None or profit_change > greatest_increase['amount']:
+                    # If so, update the greatest increase and its corresponding date
                     greatest_increase['date'] = current_date
                     greatest_increase['amount'] = profit_change
 
+            # Update the previous profit/loss for the next loop
             previous_profit_loss = current_profit_loss
 
+    # Return the dictionary containing the greatest increase and its date
     return greatest_increase
 
 
@@ -120,9 +130,10 @@ csv_file_path = csvpath
 
 greatest_increase = find_greatest_increase(csv_file_path)
 
+# Print the Financial analysis results to the terminal
 print(f"Greatest Increase in Profits: {greatest_increase['date']} (${greatest_increase['amount']})")
 
-import csv
+#function that calculates greatest decrease on profits
 
 def find_greatest_decrease(csv_file):
     greatest_decrease = {'date': None, 'amount': None}
@@ -146,23 +157,26 @@ def find_greatest_decrease(csv_file):
 
     return greatest_decrease
 
-# Example usage:
-csv_file_path = csvpath  # Replace with your CSV file path
+
+csv_file_path = csvpath 
 
 greatest_decrease = find_greatest_decrease(csv_file_path)
 
+# Print the Financial analysis results to the terminal
 print(f"Greatest Decrease in Profits: {greatest_decrease['date']} (${greatest_decrease['amount']})")
 
 
-#output all outputs from each fucntion to txt file 
+#output all results from each fucntion to txt file 
 
 output_file_path = os.path.join("python-challenge/PyBank/Analysis/analysis.txt")
 
 with open(output_file_path, 'w') as output_file:
     print("Financial Analysis", file=output_file)
+    print("                            ",file=output_file )
     print("----------------------------", file=output_file)
+    print("                            ",file=output_file )
     print(f"Total Months: {row_count}", file=output_file)
-    print(f"Total: ${result}", file=output_file)
+    print(f"Total: ${net_profit_losses}", file=output_file)
     print(f"Average Change: ${average_change}", file=output_file)
     print(f"Greatest Increase in Profits: {greatest_increase['date']} (${greatest_increase['amount']})", file=output_file)
     print(f"Greatest Decrease in Profits: {greatest_decrease['date']} (${greatest_decrease['amount']})", file=output_file)
